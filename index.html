@@ -20,11 +20,18 @@
 			.tabs {
 				font-family: "12 Hole Ocarina", monospace;
 				white-space: pre;
-				padding: 100px 20px 20px 20px;
+				margin-top: 80px;
+				padding: 20px;
 				outline: none;
 				box-sizing: border-box;
 				min-height: 100%;
 				line-height: 1.5;
+			}
+
+			.tabs div,
+			.tabs p {
+				margin: 0;
+				padding: 0;
 			}
 
 			input[type=number] {
@@ -68,6 +75,7 @@
 
 			@media print {
 				.tabs {
+					margin: 0;
 					padding: 20px;
 				}
 
@@ -114,18 +122,15 @@
 
 					var text = event.clipboardData.getData("text/plain");
 					document.execCommand('insertText', false, text);
-					//insertTextAtCursor(text);
 				}, false);
-				
+
 				editor.addEventListener("drop", function (event) {
 					event.preventDefault();
 
 					var text = event.dataTransfer.getData("text/plain");
 					document.execCommand('insertText', false, text);
-					//insertTextAtCursor(text);
 				}, false);
 
-				
 				editor.addEventListener("blur", function (event) {
 					lastCursor = getSelectionRange();
 				}, true);
@@ -169,35 +174,11 @@
 
 					if (document.activeElement !== editor) {
 						editor.focus();
-						cursorManager.setEndOfContenteditable(editor);
+						setCursorToEnd(editor);
 					}
 
 					document.execCommand('insertText', false, key);
 				};
-			}
-
-			function insertTextAtCursor (text) {
-				if (window.getSelection) {
-					var sel = window.getSelection();
-					if (sel.getRangeAt && sel.rangeCount) {
-						var range = sel.getRangeAt(0);
-						range.deleteContents();
-						range.insertNode(document.createTextNode(text));
-					}
-				}
-				else if (document.selection && document.selection.createRange) {
-					document.selection.createRange().text = text;
-				}
-			}
-
-			function insertTextAt (text, range) {
-				if (window.getSelection) {
-					range.deleteContents();
-					range.insertNode(document.createTextNode(text));
-				}
-				else if (document.selection && document.selection.createRange) {
-					range.text = text;
-				}
 			}
 
 			function getSelectionRange () {
@@ -251,9 +232,8 @@
 							}
 							else {
 								_getPlainText(el, buf);
-								if (buf.length > 0 && buf[buf.length - 1] !== "\n") {
+								if (buf.length > 0 && buf[buf.length - 1] !== "\n" && el.nextSibling) {
 									var display = getComputedStyle(el, null).getPropertyValue("display");
-									console.log(display);
 									if (display !== "inline" && display !== "inline-block") {
 										buf.push("\n");
 									}
@@ -267,23 +247,35 @@
 				}
 			}
 
-// Source: https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/toBlob
-if (!HTMLCanvasElement.prototype.toBlob) {
- Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-  value: function (callback, type, quality) {
+			function saveUrlAs (url, filename) {
+				var link = document.createElement("a");
 
-    var binStr = atob(this.toDataURL(type, quality).split(',')[1]),
-        len = binStr.length,
-        arr = new Uint8Array(len);
+				link.download = filename||"";
+				link.href = url;
+				link.style.visibility = 'hidden';
+				link.style.position = 'absolute';
+				link.style.right = '0';
+				link.style.bottom = '0';
+				document.body.appendChild(link);
 
-    for (var i=0; i<len; i++ ) {
-     arr[i] = binStr.charCodeAt(i);
-    }
+				link.click();
 
-    callback(new Blob([arr], {type: type || 'image/png'}));
-  }
- });
-}
+				document.body.removeChild(link);
+			}
+
+			function downloadCanvasImage (canvas, filename, type) {
+				if (canvas.toBlob) {
+					canvas.toBlob(function (blob) {
+						var url = URL.createObjectURL(blob);
+						saveUrlAs(url, filename);
+						URL.revokeObjectURL(url);
+					}, type);
+				}
+				else {
+					var url = canvas.toDataURL(type);
+					saveUrlAs(url, filename);
+				}
+			}
 
 			function saveImage () {
 				var size = Number(document.getElementById("font_size").value);
@@ -292,15 +284,19 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 				var lines = getPlainText(editor).split("\n");
 				var canvas = document.createElement("canvas");
 				canvas.width  = Math.max(editor.offsetWidth, editor.scrollWidth||0);
-				canvas.height = Math.max(editor.offsetHeight, editor.scrollHeight||0) - 80;
-				
+				canvas.height = Math.max(editor.offsetHeight, editor.scrollHeight||0);
+
 				var ctx = canvas.getContext("2d");
-				ctx.fillStyle = '#FFFFFF';
-				ctx.fillRect(0, 0, canvas.width, canvas.height);
-				
-				ctx.fillStyle = '#000000';
+				var line_width = 0;
 				ctx.font = size+unit+' "12 Hole Ocarina", monospace';
 				ctx.textBaseline = "top";
+
+				for (var i = 0; i < lines.length; ++ i) {
+					var metrics = ctx.measureText(lines[i]);
+					if (metrics.width > line_width) {
+						line_width = metrics.width;
+					}
+				}
 
 				var measureEl = document.createElement("div");
 				var style = getComputedStyle(editor, null);
@@ -317,6 +313,18 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 				var line_height = measureEl.offsetHeight;
 				document.body.removeChild(measureEl);
 
+				canvas.width  = line_width + 40;
+				canvas.height = line_height * lines.length + 40;
+
+				ctx = canvas.getContext("2d");
+				ctx.font = size+unit+' "12 Hole Ocarina", monospace';
+				ctx.textBaseline = "top";
+
+				ctx.fillStyle = '#FFFFFF';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+				ctx.fillStyle = '#000000';
+
 				var y = 20;
 				for (var i = 0; i < lines.length; ++ i) {
 					var line = lines[i];
@@ -324,93 +332,79 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 					y += line_height;
 				}
 
-				canvas.toBlob(function (blob) {
-					var url = URL.createObjectURL(blob);
-					var link = document.createElement("a");
-					
-					link.download = "12_hole_ocarina_tabs.png";
-					link.href = url;
-					link.style.visibility = 'hidden';
-					link.style.position = 'absolute';
-					link.style.right = '0';
-					link.style.bottom = '0';
-					document.body.appendChild(link);
-					
-					link.click();
-
-					setTimeout(function () {
-						document.body.removeChild(link);
-						URL.revokeObjectURL(url);
-					}, 50);
-				}, 'image/png');
+				downloadCanvasImage(canvas, "12_hole_ocarina_tabs.png", "image/png");
 			}
 
-// Source: http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity
-(function( cursorManager ) {
+			// Derived from: http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity
+			var VOID_NODES = {
+				AREA: true,
+				BASE: true,
+				BR: true,
+				COL: true,
+				EMBED: true,
+				HR: true,
+				IMG: true,
+				INPUT: true,
+				KEYGEN: true,
+				LINK: true,
+				MENUITEM: true,
+				META: true,
+				PARAM: true,
+				SOURCE: true,
+				TRACK: true,
+				WBR: true,
+				BASEFONT: true,
+				BGSOUND: true,
+				FRAME: true,
+				ISINDEX: true
+			};
 
-    //From: http://www.w3.org/TR/html-markup/syntax.html#syntax-elements
-    var voidNodeTags = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'KEYGEN', 'LINK', 'MENUITEM', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR', 'BASEFONT', 'BGSOUND', 'FRAME', 'ISINDEX'];
+			function canContainText (node) {
+				if (node.nodeType == 1) { //is an element node
+					return VOID_NODES[node.nodeName] === true;
+				}
+				else { //is not an element node
+					return false;
+				}
+			}
 
-    //From: http://stackoverflow.com/questions/237104/array-containsobj-in-javascript
-    Array.prototype.contains = function(obj) {
-        var i = this.length;
-        while (i--) {
-            if (this[i] === obj) {
-                return true;
-            }
-        }
-        return false;
-    }
+			function getLastChildElement (el) {
+				var lc = el.lastChild;
+				while (lc && lc.nodeType !== 1) {
+					if (lc.previousSibling)
+						lc = lc.previousSibling;
+					else
+						break;
+				}
+				return lc;
+			}
 
-    //Basic idea from: http://stackoverflow.com/questions/19790442/test-if-an-element-can-contain-text
-    function canContainText(node) {
-        if(node.nodeType == 1) { //is an element node
-            return !voidNodeTags.contains(node.nodeName);
-        } else { //is not an element node
-            return false;
-        }
-    };
+			function setCursorToEnd (element) {
+				for (;;) {
+					var lc = getLastChildElement(element);
 
-    function getLastChildElement(el){
-        var lc = el.lastChild;
-        while(lc && lc.nodeType != 1) {
-            if(lc.previousSibling)
-                lc = lc.previousSibling;
-            else
-                break;
-        }
-        return lc;
-    }
+					if (!lc || !canContainText(lc))
+						break;
 
-    //Based on Nico Burns's answer
-    cursorManager.setEndOfContenteditable = function(contentEditableElement)
-    {
+					element = lc;
+				}
 
-        while(getLastChildElement(contentEditableElement) &&
-              canContainText(getLastChildElement(contentEditableElement))) {
-            contentEditableElement = getLastChildElement(contentEditableElement);
-        }
-
-        var range,selection;
-        if(document.createRange)//Firefox, Chrome, Opera, Safari, IE 9+
-        {    
-            range = document.createRange();//Create a range (a range is a like the selection but invisible)
-            range.selectNodeContents(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            selection = window.getSelection();//get the selection object (allows you to change selection)
-            selection.removeAllRanges();//remove any selections already made
-            selection.addRange(range);//make the range you have just created the visible selection
-        }
-        else if(document.selection)//IE 8 and lower
-        { 
-            range = document.body.createTextRange();//Create a range (a range is a like the selection but invisible)
-            range.moveToElementText(contentEditableElement);//Select the entire contents of the element with the range
-            range.collapse(false);//collapse the range to the end point. false means collapse to end rather than the start
-            range.select();//Select the range (make it the visible selection
-        }
-    }
-
-}( window.cursorManager = window.cursorManager || {}));
+				var range, selection;
+				if (document.createRange) { // Firefox, Chrome, Opera, Safari, IE 9+
+					range = document.createRange();
+					range.selectNodeContents(element);
+					range.collapse(false);
+					selection = window.getSelection();
+					selection.removeAllRanges();
+					selection.addRange(range);
+				}
+				else if (document.selection) { // IE 8 and lower
+					range = document.body.createTextRange();
+					range.moveToElementText(element);
+					range.collapse(false);
+					range.select();
+				}
+			}
 		// ]]>
 		</script>
 	</head>
@@ -435,7 +429,7 @@ if (!HTMLCanvasElement.prototype.toBlob) {
 						<option value="pc">pc</option>
 					</select>
 				</span>
-	
+
 				<span class="controls-line">
 					<button type="button" onclick="saveImage();">Save Image</button>
 					<button type="button" onclick="shareLink();">Share Link</button>
