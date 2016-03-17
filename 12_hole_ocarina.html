@@ -122,7 +122,6 @@
 
 					var text = event.clipboardData.getData("text/plain");
 					document.execCommand('insertText', false, text);
-					//insertTextAtCursor(text);
 				}, false);
 
 				editor.addEventListener("drop", function (event) {
@@ -130,7 +129,6 @@
 
 					var text = event.dataTransfer.getData("text/plain");
 					document.execCommand('insertText', false, text);
-					//insertTextAtCursor(text);
 				}, false);
 
 				editor.addEventListener("blur", function (event) {
@@ -181,30 +179,6 @@
 
 					document.execCommand('insertText', false, key);
 				};
-			}
-
-			function insertTextAtCursor (text) {
-				if (window.getSelection) {
-					var sel = window.getSelection();
-					if (sel.getRangeAt && sel.rangeCount) {
-						var range = sel.getRangeAt(0);
-						range.deleteContents();
-						range.insertNode(document.createTextNode(text));
-					}
-				}
-				else if (document.selection && document.selection.createRange) {
-					document.selection.createRange().text = text;
-				}
-			}
-
-			function insertTextAt (text, range) {
-				if (window.getSelection) {
-					range.deleteContents();
-					range.insertNode(document.createTextNode(text));
-				}
-				else if (document.selection && document.selection.createRange) {
-					range.text = text;
-				}
 			}
 
 			function getSelectionRange () {
