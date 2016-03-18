@@ -6,8 +6,13 @@
 		<title>12 Hole Ocarina Tabs</title>
 		<style type="text/css">
 			@font-face {
-				font-family: "12 Hole Ocarina";
-				src: url("Ocarina-12-Hole.ttf");
+				font-family: "Open 12 Hole Ocarina C3";
+				src: url("Open-12-Hole-Ocarina-C3.ttf");
+			}
+
+			@font-face {
+				font-family: "Open 12 Hole Ocarina G4";
+				src: url("Open-12-Hole-Ocarina-G4.ttf");
 			}
 
 			html, body {
@@ -18,7 +23,7 @@
 			}
 
 			.tabs {
-				font-family: "12 Hole Ocarina", monospace;
+				font-family: "Open 12 Hole Ocarina C3", monospace;
 				white-space: pre;
 				margin-top: 80px;
 				padding: 20px;
@@ -36,7 +41,7 @@
 
 			input[type=number] {
 				text-align: right;
-				width: 4em;
+				width: 3em;
 			}
 
 			.controls {
@@ -102,8 +107,10 @@
 			function updateStyle() {
 				var size = Number(document.getElementById("font_size").value);
 				var unit = document.getElementById("font_size_unit").value;
+				var family = document.getElementById("font_family").value;
 				var editor = document.getElementById("editor");
 				editor.style.fontSize = size+unit;
+				editor.style.fontFamily = '"'+family+'", monospace';
 			}
 
 			var lastCursor = null;
@@ -417,7 +424,7 @@
 
 			<span class="controls-cell">
 				<span class="controls-line">
-					<label>Font-Size:
+					<label>Size:
 						<input type="number" id="font_size" onchange="updateStyle();" value="64"/>
 					</label>
 					<select id="font_size_unit" onchange="updateStyle();">
@@ -427,6 +434,11 @@
 						<option value="in">in</option>
 						<option value="pt">pt</option>
 						<option value="pc">pc</option>
+					</select>
+
+					<select id="font_family" onchange="updateStyle();">
+						<option value="Open 12 Hole Ocarina C3" selected>C3</option>
+						<option value="Open 12 Hole Ocarina G4">G4</option>
 					</select>
 				</span>
 

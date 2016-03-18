@@ -62,7 +62,7 @@ def parse_style(stylestr):
 def stringify_style(style):
 	return u';'.join(u'%s: %s' % (key, style[key]) for key in style)
 
-def make_fonts(infilename, outfilename, tmpdir, letters):
+def make_fonts(infilename, outfilename, name, tmpdir, letters):
 	if not os.path.exists(tmpdir):
 		os.makedirs(tmpdir)
 
@@ -73,7 +73,6 @@ def make_fonts(infilename, outfilename, tmpdir, letters):
 	font = fontforge.font()
 	font.em = EM
 
-	name = "Ocarina 12 Hole"
 	font.familyname = name
 	font.fullname = name
 	font.fontname = name.replace(" ","-")
@@ -104,12 +103,19 @@ def make_fonts(infilename, outfilename, tmpdir, letters):
 
 	glyph = font.createChar(ord('-'))
 	glyph.width = EM
+#	glyph.importOutlines("dash.svg")
+
 	pen = glyph.glyphPen()
-	pen.moveTo((300, 300))
-	pen.lineTo((300, 360))
-	pen.lineTo((EM-300, 360))
-	pen.lineTo((EM-300, 300))
+	pen.moveTo((256, 256))
+	pen.lineTo((256, 320))
+	pen.lineTo((EM-256, 320))
+	pen.lineTo((EM-256, 256))
 	pen.closePath()
+	glyph.autoHint()
+
+#	glyph.autoHint()
+#	glyph.addHint(False, 256.0, 64.0)
+#	glyph.manualHints = 1
 
 	glyph = font.createChar(ord('_'))
 	glyph.width = EM
@@ -120,7 +126,7 @@ def make_fonts(infilename, outfilename, tmpdir, letters):
 	font.version = '1.0'
 	font.copyright = '''\
 Copyright (c) 2016, Mathias Panzenböck <grosser.meister.morti@gmx.net>.
-
+with Reserved Font Name {name}.
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
@@ -213,10 +219,13 @@ INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
 DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
 OTHER DEALINGS IN THE FONT SOFTWARE.
-'''
+'''.format(name=name)
 
 	font.generate(outfilename)
 
 if __name__ == '__main__':
 	import sys
-	make_fonts('ocarina.svg', 'Ocarina-12-Hole.ttf', 'tmp', LETTERS)
+	svg  = sys.argv[1]
+	ttf  = sys.argv[2]
+	name = ttf.rsplit('.', 1)[0].replace('-', ' ')
+	make_fonts(svg, ttf, name, 'tmp', LETTERS)

@@ -15,7 +15,9 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="ocarina.svg">
+   sodipodi:docname="Open-12-Hole-Ocarina-C3.svg">
+  <title
+     id="title4146">Open 12 Hole Ocarina C3</title>
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -25,9 +27,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.7"
-     inkscape:cx="1032.5563"
-     inkscape:cy="187.9421"
+     inkscape:zoom="0.35"
+     inkscape:cx="924.80333"
+     inkscape:cy="573.03061"
      inkscape:document-units="px"
      inkscape:current-layer="layer2"
      showgrid="false"
@@ -50,8 +52,37 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title>Open 12 Hole Ocarina C3</dc:title>
+        <cc:license
+           rdf:resource="http://scripts.sil.org/OFL" />
+        <dc:date>2016</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Mathias Panzenböck</dc:title>
+          </cc:Agent>
+        </dc:creator>
       </cc:Work>
+      <cc:License
+         rdf:about="http://scripts.sil.org/OFL">
+        <cc:permits
+           rdf:resource="http://scripts.sil.org/pub/OFL/Reproduction" />
+        <cc:permits
+           rdf:resource="http://scripts.sil.org/pub/OFL/Distribution" />
+        <cc:permits
+           rdf:resource="http://scripts.sil.org/pub/OFL/Embedding" />
+        <cc:permits
+           rdf:resource="http://scripts.sil.org/pub/OFL/DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://scripts.sil.org/pub/OFL/Notice" />
+        <cc:requires
+           rdf:resource="http://scripts.sil.org/pub/OFL/Attribution" />
+        <cc:requires
+           rdf:resource="http://scripts.sil.org/pub/OFL/ShareAlike" />
+        <cc:requires
+           rdf:resource="http://scripts.sil.org/pub/OFL/DerivativeRenaming" />
+        <cc:requires
+           rdf:resource="http://scripts.sil.org/pub/OFL/BundlingWhenSelling" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
   <g
@@ -68,86 +99,74 @@
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_6"
-       cx="-133.99423"
-       cy="540.83569"
-       r="28.369736"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="114.08487"
+       cy="544.82562"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_7"
-       cx="-227.43335"
-       cy="542.35089"
-       r="24.910162"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="23.995222"
+       cy="573.77948"
+       r="36" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_5"
-       cx="-40.050018"
-       cy="523.66309"
-       r="27.705324"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="191.37856"
+       cy="492.23453"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_10"
-       cx="43.792603"
-       cy="490.32809"
-       r="23.872936"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="253.07832"
+       cy="423.18524"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_4"
-       cx="42.782471"
-       cy="626.1936"
-       r="29.0299"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="322.06818"
+       cy="557.62213"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_2"
-       cx="193.71425"
-       cy="555.54028"
-       r="24.515532"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="422.28571"
+       cy="409.82599"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_3"
-       cx="119.5381"
-       cy="585.86005"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)"
-       r="26.097214" />
+       cx="368.82382"
+       cy="480.86005"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_11"
-       cx="-116.29036"
-       cy="597.4198"
-       r="19.060635"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="155.32056"
+       cy="596.22955"
+       r="20" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_1"
-       cx="263.9567"
-       cy="533.86963"
-       r="22.387703"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="483.9567"
+       cy="341.72675"
+       r="35" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_8"
-       cx="-245.02435"
-       cy="697.89948"
-       r="35.672932"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
-    <circle
-       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="hole_9"
-       cx="0.55719215"
-       cy="821.12115"
-       r="35.672932"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="75.195778"
+       cy="758.08392"
+       r="36" />
     <circle
        style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="hole_12"
-       cx="93.906395"
-       cy="535.51093"
-       r="19.060635"
-       transform="matrix(0.89379899,-0.44846779,0.44846779,0.89379899,0,0)" />
+       cx="317.47784"
+       cy="441.22519"
+       r="20" />
+    <circle
+       style="opacity:1;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="hole_9"
+       cx="369.48151"
+       cy="758.08392"
+       r="36" />
   </g>
 </svg>
