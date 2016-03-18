@@ -97,13 +97,21 @@
 				search = search.replace(/^\?/,'');
 				var params = {};
 				if (search) {
-					search = search.split("&");
+					search = search.replace(/\+/g,' ').replace(/\//g,'\n').split("&");
 					for (var i = 0; i < search.length; ++ i) {
 						var pair = search[i].split("=");
 						params[decodeURIComponent(pair[0])] = decodeURIComponent(pair.slice(1).join("="));
 					}
 				}
 				return params;
+			}
+
+			function makeParams (params) {
+				var buf = [];
+				for (var name in params) {
+					buf.push(encodeURIComponent(name)+'='+encodeURIComponent(params[name]));
+				}
+				return buf.sort().join('&').replace(/%20/g,'+').replace(/%0A/gi,'/');
 			}
 
 			function updateStyle() {
@@ -120,10 +128,22 @@
 				var editor = document.getElementById("editor");
 				updateStyle();
 
-				var tabs = parseParams(location.search).tabs;
-				if (tabs) {
+				var params = parseParams(location.search);
+				if (params.tabs) {
 					editor.innerHTML = '';
-					editor.appendChild(document.createTextNode(tabs));
+					editor.appendChild(document.createTextNode(params.tabs));
+				}
+				if (params.size) {
+					var match = /^\s*(\d+(?:\.\d*)?)(\w+)?\s*$/.exec(params.size);
+					var size = Number(match[1]);
+					var unit = match[2]||'px';
+					document.getElementById("font_size").value = size;
+					document.getElementById("font_size_unit").value = unit;
+					editor.style.fontSize = size+unit;
+				}
+				if (params.family) {
+					document.getElementById("font_family").value = params.family;
+					editor.style.fontFamily = '"'+params.family+'", monospace';
 				}
 
 				editor.addEventListener("paste", function (event) {
@@ -216,9 +236,20 @@
 				}
 			}
 
-			function shareUrl () {
+			function formValues () {
+				var size = Number(document.getElementById("font_size").value);
+				var unit = document.getElementById("font_size_unit").value;
+				var family = document.getElementById("font_family").value;
 				var editor = document.getElementById("editor");
-				return location.href.replace(/[#\?].*/,'') + '?tabs=' + encodeURIComponent(getPlainText(editor));
+				return {
+					tabs: getPlainText(editor),
+					size: size+unit,
+					family: family
+				};
+			}
+
+			function shareUrl () {
+				return location.href.replace(/[#\?].*/,'').replace(/^http:/,'https:') + '?' + makeParams(formValues());
 			}
 
 			function shareLink () {
