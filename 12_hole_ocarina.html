@@ -20,6 +20,8 @@
 				padding: 0;
 				font-family: sans-serif;
 				height: 100%;
+				background: white;
+				color: black;
 			}
 
 			.tabs {
@@ -214,10 +216,31 @@
 				}
 			}
 
-			function shareLink () {
+			function shareUrl () {
 				var editor = document.getElementById("editor");
-				var url = location.href.replace(/[#\?].*/,'') + '?tabs=' + encodeURIComponent(getPlainText(editor));
-				prompt("Share-Link:", url);
+				return location.href.replace(/[#\?].*/,'') + '?tabs=' + encodeURIComponent(getPlainText(editor));
+			}
+
+			function shareLink () {
+				prompt("Share-Link:", shareUrl());
+			}
+
+			var HTML_CHARS = {
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				'&': '&amp;',
+			};
+
+			function escapeHtml (s) {
+				return s.replace(/[<>"&]/g, function (ch) {
+					return HTML_CHARS[ch];
+				});
+			}
+
+			function shareEmbed () {
+				prompt("Embed-Code:", '<iframe src="'+escapeHtml(shareUrl())+
+					'" style="width:800px;height:800px;border:1px solid lightgray;border-radius:5px;"></iframe>');
 			}
 
 			function getPlainText (element) {
@@ -443,9 +466,10 @@
 				</span>
 
 				<span class="controls-line">
-					<button type="button" onclick="saveImage();">Save Image</button>
-					<button type="button" onclick="shareLink();">Share Link</button>
-					<button type="button" onclick="window.print();">Print</button>
+					<button type="button" onclick="saveImage();">&#x1F4BE; Image</button>
+					<button type="button" onclick="shareLink();">&#x1F517; Link</button>
+					<button type="button" onclick="shareEmbed();">&lt;/&gt; Embed</button>
+					<button type="button" onclick="window.print();">&#x1F5B6; Print</button>
 				</span>
 			</span>
 
