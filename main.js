@@ -34,9 +34,10 @@ function init() {
 	updateStyle();
 
 	var params = parseParams(location.search);
-	if (params.tabs) {
-		editor.innerHTML = '';
-		editor.appendChild(document.createTextNode(params.tabs));
+
+	if (params.readonly === 'true') {
+		editor.contentEditable = 'false';
+		document.body.className = 'readonly';
 	}
 
 	if (params.size) {
@@ -51,6 +52,11 @@ function init() {
 	if (params.family) {
 		document.getElementById("font_family").value = params.family;
 		editor.style.fontFamily = '"'+params.family+'", monospace';
+	}
+
+	if (params.tabs) {
+		editor.innerHTML = '';
+		editor.appendChild(document.createTextNode(params.tabs));
 	}
 
 	if (window.chrome && window.chrome.app && !window.chrome.app.isInstalled) {
@@ -171,7 +177,7 @@ var HTML_CHARS = {
 	'<': '&lt;',
 	'>': '&gt;',
 	'"': '&quot;',
-	'&': '&amp;',
+	'&': '&amp;'
 };
 
 function escapeHtml (s) {
