@@ -53,7 +53,7 @@ function init() {
 		editor.style.fontFamily = '"'+params.family+'", monospace';
 	}
 
-	if (window.chrome) {
+	if (window.chrome && window.chrome.app && !window.chrome.app.isInstalled) {
 //		document.getElementById("install_app").style.display = "";
 	}
 
