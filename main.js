@@ -38,6 +38,7 @@ function init() {
 		editor.innerHTML = '';
 		editor.appendChild(document.createTextNode(params.tabs));
 	}
+
 	if (params.size) {
 		var match = /^\s*(\d+(?:\.\d*)?)(\w+)?\s*$/.exec(params.size);
 		var size = Number(match[1]);
@@ -46,9 +47,14 @@ function init() {
 		document.getElementById("font_size_unit").value = unit;
 		editor.style.fontSize = size+unit;
 	}
+
 	if (params.family) {
 		document.getElementById("font_family").value = params.family;
 		editor.style.fontFamily = '"'+params.family+'", monospace';
+	}
+
+	if (window.chrome) {
+//		document.getElementById("install_app").style.display = "";
 	}
 
 	editor.addEventListener("paste", function (event) {
@@ -370,4 +376,10 @@ function setCursorToEnd (element) {
 		range.collapse(false);
 		range.select();
 	}
-} 
+}
+
+function installApp () {
+	if (window.chrome) {
+		window.location = "https://panzi.github.io/ocarina_tabs/app/ocarina_tabs.crx";
+	}
+}
