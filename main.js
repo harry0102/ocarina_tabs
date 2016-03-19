@@ -59,6 +59,20 @@ function init() {
 		editor.appendChild(document.createTextNode(params.tabs));
 	}
 
+	if (window !== parent) {
+		var link = document.createElement("a");
+		link.className = "embed-link";
+		link.target = "_top";
+		link.href = shareUrl();
+
+		var img = new Image();
+		img.src = "app/ocarina_tabs/icon16.png";
+		img.alt = "";
+		link.appendChild(img);
+		link.appendChild(document.createTextNode(" "+document.title));
+		document.body.appendChild(link);
+	}
+
 	if (window.chrome && window.chrome.app && !window.chrome.app.isInstalled) {
 //		document.getElementById("install_app").style.display = "";
 	}
