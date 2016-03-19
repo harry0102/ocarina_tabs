@@ -2,5 +2,6 @@
 *~
 *.ttf
 tmp
+*.zip
 *.pem
 *.crx

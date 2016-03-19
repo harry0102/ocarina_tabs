@@ -5,7 +5,7 @@
 	"version": "1.0",
 	"app": {
 		"urls": [
-			"*://panzi.github.io/ocarina_tabs/"
+			"https://panzi.github.io/ocarina_tabs/"
 		],
 		"launch": {
 			"web_url": "https://panzi.github.io/ocarina_tabs/"
