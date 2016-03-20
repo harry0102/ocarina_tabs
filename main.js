@@ -28,7 +28,7 @@ function updateStyle() {
 	editor.style.fontFamily = '"'+family+'", monospace';
 }
 
-var lastCursor = null;
+var last_cursor = null;
 function init() {
 	var editor = document.getElementById("editor");
 	updateStyle();
@@ -92,7 +92,11 @@ function init() {
 	}, false);
 
 	editor.addEventListener("blur", function (event) {
-		lastCursor = getSelectionRange();
+		last_cursor = getSelectionRange();
+	}, true);
+	
+	editor.addEventListener("focus", function (event) {
+		last_cursor = null;
 	}, true);
 
 	var full_notes = document.getElementById("full_notes");
@@ -126,6 +130,7 @@ function addButtons (parent, keys, labels) {
 		var key = keys[i];
 		var label = labels[i];
 		var button = document.createElement("button");
+		button.className = "btn";
 		button.type = "button";
 		button.title = key;
 		button.appendChild(document.createTextNode(label));
@@ -139,8 +144,9 @@ function makeInserter (key) {
 	var editor = document.getElementById("editor");
 
 	return function (event) {
-		if (lastCursor && document.activeElement !== editor) {
-			setSelectionRange(lastCursor);
+		if (last_cursor && document.activeElement !== editor) {
+			editor.focus();
+			setSelectionRange(last_cursor);
 		}
 
 		if (document.activeElement !== editor) {
@@ -253,7 +259,7 @@ function _getPlainText (element, buf) {
 function saveUrlAs (url, filename) {
 	var link = document.createElement("a");
 
-	link.download = filename||"";
+	link.setAttribute("download", filename||"");
 	link.href = url;
 	link.style.visibility = 'hidden';
 	link.style.position = 'absolute';
@@ -271,7 +277,9 @@ function saveCanvasImage (canvas, filename, type) {
 		canvas.toBlob(function (blob) {
 			var url = URL.createObjectURL(blob);
 			saveUrlAs(url, filename);
-			URL.revokeObjectURL(url);
+			setTimeout(function () {
+				URL.revokeObjectURL(url);
+			}, 0);
 		}, type);
 	}
 	else {
@@ -346,12 +354,39 @@ function saveAsTextFile () {
 
 	var url = URL.createObjectURL(blob);
 	saveUrlAs(url, "12_hole_ocarina_tabs.txt");
-	URL.revokeObjectURL(url);
+	setTimeout(function () {
+		URL.revokeObjectURL(url);
+	}, 0);
 
 	saveAsFile = saveAsTextFile;
 }
 
 var saveAsFile = saveAsImage;
+
+function openTextFile (input) {
+	var editor = document.getElementById("editor");
+
+	var file = input.files[input.files.length - 1];
+	var reader = new FileReader();
+	reader.onload = function () {
+		var text = reader.result;
+		editor.focus();
+		document.execCommand('selectAll', false, null);
+		document.execCommand('insertText', false, text);
+	};
+	reader.onerror = function () {
+		alert(this.error);
+	}
+	reader.readAsText(file);
+
+	// clear input
+	var new_input = document.createElement("input");
+	new_input.type = "file";
+	new_input.addEventListener("change", function (event) {
+		openTextFile(this);
+	}, false);
+	input.parentNode.replaceChild(input, new_input);
+}
 
 function toggleMenu (id) {
 	var menu = document.querySelector("#"+id+" .dropdown-menu");
@@ -443,4 +478,12 @@ function installApp () {
 	if (window.chrome) {
 		window.location = "https://panzi.github.io/ocarina_tabs/app/ocarina_tabs.crx";
 	}
+}
+
+function undoEdit () {
+	document.execCommand("undo", false, null);
+}
+
+function redoEdit () {
+	document.execCommand("redo", false, null);
 }
