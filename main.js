@@ -144,9 +144,10 @@ function makeInserter (key) {
 	var editor = document.getElementById("editor");
 
 	return function (event) {
-		if (last_cursor && document.activeElement !== editor) {
+		var cursor = last_cursor;
+		if (cursor && document.activeElement !== editor) {
 			editor.focus();
-			setSelectionRange(last_cursor);
+			setSelectionRange(cursor);
 		}
 
 		if (document.activeElement !== editor) {
@@ -291,6 +292,7 @@ function saveCanvasImage (canvas, filename, type) {
 function saveAsImage () {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
+	var family = document.getElementById("font_family").value;
 	var editor = document.getElementById("editor");
 	var lines = getPlainText(editor).split("\n");
 	var canvas = document.createElement("canvas");
@@ -299,7 +301,7 @@ function saveAsImage () {
 
 	var ctx = canvas.getContext("2d");
 	var line_width = 0;
-	ctx.font = size+unit+' "12 Hole Ocarina", monospace';
+	ctx.font = size+unit+' "'+family+'", monospace';
 	ctx.textBaseline = "top";
 
 	for (var i = 0; i < lines.length; ++ i) {
