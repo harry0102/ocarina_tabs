@@ -35,6 +35,7 @@
 				margin: 0;
 				padding: 0;
 				font-family: sans-serif;
+				font-size: 16px;
 				height: 100%;
 				background: white;
 				color: black;
@@ -67,7 +68,7 @@
 				right: 0;
 				top: 0;
 				background: white;
-				border-bottom: 1px solid lightgray;
+				box-shadow: 0 0 20px rgba(0,0,0,0.5);
 				padding: 10px;
 			}
 
@@ -88,11 +89,19 @@
 				background: #eeeeee;
 			}
 
-			button, select, input {
+			.btn, button, select, input {
 				padding: 0.1em 0.5em;
+				margin: 0;
 				border: 1px solid lightgray;
 				border-radius: 5px;
 				background: white;
+				vertical-align: top;
+			}
+
+			.btn {
+				display: inline-block;
+				box-sizing: border-box;
+				height: 24px;
 			}
 
 			a {
@@ -134,6 +143,59 @@
 
 			body:hover .embed-link {
 				opacity: 1;
+			}
+			
+			.dropdown-button {
+				position: relative;
+				display: inline-block;
+			}
+
+			.dropdown-button .dropdown-menu {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				display: none;
+				background: white;
+				box-shadow: 0 0 10px rgba(0,0,0,0.5);
+			}
+			
+			.dropdown-button .dropdown-menu button {
+				border: none;
+				white-space: nowrap;
+				display: block;
+				border-radius: 0;
+				min-width: 100%;
+				text-align: left;
+			}
+
+			.dropdown-button .dropdown-button-default {
+				border-bottom-right-radius: 0;
+				border-top-right-radius: 0;
+				border-right: none;
+			}
+
+			.dropdown-button .dropdown-button-arrow {
+				border-bottom-left-radius: 0;
+				border-top-left-radius: 0;
+			}
+
+			.file-button {
+				position: relative;
+				overflow: hidden;
+			}
+
+			.file-button input[type=file] {
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+				margin: 0;
+				padding: 0;
+				border: none;
+				position: absolute;
+				right: 0;
+				top: 0;
+				cursor: pointer;
+				opacity: 0;
 			}
 
 			@media print {
@@ -184,11 +246,25 @@
 				</span>
 
 				<span class="controls-line">
-					<button type="button" onclick="saveImage();" title="Save Image">&#x1F4BE;</button>
-					<button type="button" onclick="shareLink();" title="Share Link">&#x1F517;</button>
-					<button type="button" onclick="shareEmbed();" title="Embed">&lt;/&gt;</button>
-					<button type="button" onclick="window.print();" title="Print">&#x1F5B6;</button>
-					<button type="button" onclick="installApp();" title="Install App" id="install_app" style="display:none;">Install</button>
+					<button class="btn" type="button" onclick="undoEdit();" title="Undo">&#x21b6;</button>
+					<button class="btn" type="button" onclick="redoEdit();" title="Redo">&#x21b7;</button>
+
+					<span class="dropdown-button" id="save-as-dropdown">
+						<button type="button" class="btn dropdown-button-default" onclick="saveAsFile();" title="Save File">&#x1F4BE;</button><button
+						        type="button" class="btn dropdown-button-arrow" onclick="toggleMenu('save-as-dropdown');">&#x25be;</button>
+						<span class="dropdown-menu">
+							<button type="button" onclick="saveAsImage();hideMenu('save-as-dropdown');">Save as Image</button>
+							<button type="button" onclick="saveAsTextFile();hideMenu('save-as-dropdown');">Save as Text File</button>
+						</span>
+					</span>
+					<span class="btn file-button" title="Open Text File">
+						<span>&#x1f4c2;</span>
+						<input type="file" onchange="openTextFile(this);"/>
+					</span>
+					<button class="btn" type="button" onclick="shareLink();" title="Share Link">&#x1F517;</button>
+					<button class="btn" type="button" onclick="shareEmbed();" title="Embed">‹/›</button>
+					<button class="btn" type="button" onclick="window.print();" title="Print">&#x1F5B6;</button>
+					<button class="btn" type="button" onclick="installApp();" title="Install App" id="install_app" style="display:none;">Install</button>
 				</span>
 			</span>
 
