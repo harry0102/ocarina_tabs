@@ -67,7 +67,7 @@
 				right: 0;
 				top: 0;
 				background: white;
-				border-bottom: 1px solid lightgray;
+				box-shadow: 0 0 20px rgba(0,0,0,0.5);
 				padding: 10px;
 			}
 
@@ -135,6 +135,40 @@
 			body:hover .embed-link {
 				opacity: 1;
 			}
+			
+			.dropdown-button {
+				position: relative;
+				display: inline-block;
+			}
+
+			.dropdown-button .dropdown-menu {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				display: none;
+				background: white;
+				box-shadow: 0 0 10px rgba(0,0,0,0.5);
+			}
+			
+			.dropdown-button .dropdown-menu button {
+				border: none;
+				white-space: nowrap;
+				display: block;
+				border-radius: 0;
+				min-width: 100%;
+				text-align: left;
+			}
+
+			.dropdown-button .dropdown-button-default {
+				border-bottom-right-radius: 0;
+				border-top-right-radius: 0;
+				border-right: none;
+			}
+
+			.dropdown-button .dropdown-button-arrow {
+				border-bottom-left-radius: 0;
+				border-top-left-radius: 0;
+			}
 
 			@media print {
 				.tabs {
@@ -184,7 +218,14 @@
 				</span>
 
 				<span class="controls-line">
-					<button type="button" onclick="saveImage();" title="Save Image">&#x1F4BE;</button>
+					<span class="dropdown-button" id="save-as-dropdown">
+						<button type="button" class="dropdown-button-default" onclick="saveAsFile();" title="Save File">&#x1F4BE;</button><button
+						        type="button" class="dropdown-button-arrow" onclick="toggleMenu('save-as-dropdown');">&#x25bc;</button>
+						<span class="dropdown-menu">
+							<button type="button" onclick="saveAsImage();hideMenu('save-as-dropdown');">Save as Image</button>
+							<button type="button" onclick="saveAsTextFile();hideMenu('save-as-dropdown');">Save as Text File</button>
+						</span>
+					</span>
 					<button type="button" onclick="shareLink();" title="Share Link">&#x1F517;</button>
 					<button type="button" onclick="shareEmbed();" title="Embed">&lt;/&gt;</button>
 					<button type="button" onclick="window.print();" title="Print">&#x1F5B6;</button>

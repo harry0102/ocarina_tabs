@@ -108,6 +108,17 @@ function init() {
 	addButtons(other_notes, other_keys, other_labels);
 
 	editor.focus();
+
+	window.addEventListener("click", function (event) {
+		var menu = document.querySelector("#save-as-dropdown .dropdown-menu");
+		var arrow = document.querySelector("#save-as-dropdown .dropdown-button-arrow");
+
+		if (event.target !== menu && !menu.contains(event.target) &&
+			event.target !== arrow && !arrow.contains(event.target)) {
+			menu.style.display = 'none';
+		}
+		
+	}, false);
 }
 
 function addButtons (parent, keys, labels) {
@@ -255,7 +266,7 @@ function saveUrlAs (url, filename) {
 	document.body.removeChild(link);
 }
 
-function downloadCanvasImage (canvas, filename, type) {
+function saveCanvasImage (canvas, filename, type) {
 	if (canvas.toBlob) {
 		canvas.toBlob(function (blob) {
 			var url = URL.createObjectURL(blob);
@@ -269,7 +280,7 @@ function downloadCanvasImage (canvas, filename, type) {
 	}
 }
 
-function saveImage () {
+function saveAsImage () {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
 	var editor = document.getElementById("editor");
@@ -324,7 +335,37 @@ function saveImage () {
 		y += line_height;
 	}
 
-	downloadCanvasImage(canvas, "12_hole_ocarina_tabs.png", "image/png");
+	saveCanvasImage(canvas, "12_hole_ocarina_tabs.png", "image/png");
+	saveAsFile = saveAsImage;
+}
+
+function saveAsTextFile () {
+	var editor = document.getElementById("editor");
+	var text = getPlainText(editor);
+	var blob = new Blob([text], {type : 'text/plain;charset=UTF-8'});
+
+	var url = URL.createObjectURL(blob);
+	saveUrlAs(url, "12_hole_ocarina_tabs.txt");
+	URL.revokeObjectURL(url);
+
+	saveAsFile = saveAsTextFile;
+}
+
+var saveAsFile = saveAsImage;
+
+function toggleMenu (id) {
+	var menu = document.querySelector("#"+id+" .dropdown-menu");
+	if (menu.style.display === 'block') {
+		menu.style.display = 'none';
+	}
+	else {
+		menu.style.display = 'block';
+	}
+}
+
+function hideMenu (id) {
+	var menu = document.querySelector("#"+id+" .dropdown-menu");
+	menu.style.display = 'none';
 }
 
 // Derived from: http://stackoverflow.com/questions/1125292/how-to-move-cursor-to-end-of-contenteditable-entity
