@@ -301,7 +301,8 @@ function saveAsImage () {
 
 	var ctx = canvas.getContext("2d");
 	var line_width = 0;
-	ctx.font = size+unit+' "'+family+'", monospace';
+	var font = size+unit+" '"+family+"', monospace";
+	ctx.font = font;
 	ctx.textBaseline = "top";
 
 	for (var i = 0; i < lines.length; ++ i) {
@@ -330,7 +331,7 @@ function saveAsImage () {
 	canvas.height = line_height * lines.length + 40;
 
 	ctx = canvas.getContext("2d");
-	ctx.font = size+unit+' "12 Hole Ocarina", monospace';
+	ctx.font = font;
 	ctx.textBaseline = "top";
 
 	ctx.fillStyle = '#FFFFFF';
