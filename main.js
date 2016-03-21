@@ -431,12 +431,7 @@ var VOID_NODES = {
 };
 
 function canContainText (node) {
-	if (node.nodeType == 1) { //is an element node
-		return VOID_NODES[node.nodeName] === true;
-	}
-	else { //is not an element node
-		return false;
-	}
+	return node.nodeType === 1 && VOID_NODES[node.nodeName] !== true;
 }
 
 function getLastChildElement (el) {
