@@ -7,8 +7,8 @@ Example tab: [Clocktown Theme](http://tinyurl.com/clocktown) from The Legend of 
 
 Font Downloads
 --------------
- * [Open-12-Hole-Ocarina-C3.ttf](https://panzi.github.io/ocarina_tabs/Open-12-Hole-Ocarina-C3.ttf)
- * [Open-12-Hole-Ocarina-G4.ttf](https://panzi.github.io/ocarina_tabs/Open-12-Hole-Ocarina-G4.ttf)
+ * [Open-12-Hole-Ocarina-1.ttf](https://panzi.github.io/ocarina_tabs/Open-12-Hole-Ocarina-1.ttf)
+ * [Open-12-Hole-Ocarina-2.ttf](https://panzi.github.io/ocarina_tabs/Open-12-Hole-Ocarina-2.ttf)
 
 License
 -------
