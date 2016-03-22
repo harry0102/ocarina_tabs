@@ -1,14 +1,14 @@
 var KEY_MAPS = {
 	C: {
 		half: [
-			{key: "B", label: "A#"},
-			{key: "E", label: "C#"},
-			{key: "G", label: "D#"},
-			{key: "J", label: "F#"},
-			{key: "L", label: "G#"},
-			{key: "N", label: "A#²"},
-			{key: "Q", label: "C#²"},
-			{key: "S", label: "D#²"}
+			{key: "B", label: "A\u266F"},
+			{key: "E", label: "C\u266F"},
+			{key: "G", label: "D\u266F"},
+			{key: "J", label: "F\u266F"},
+			{key: "L", label: "G\u266F"},
+			{key: "N", label: "A\u266F²"},
+			{key: "Q", label: "C\u266F²"},
+			{key: "S", label: "D\u266F²"}
 		],
 		full: [
 			{key: "A", label: "A"},
@@ -28,15 +28,15 @@ var KEY_MAPS = {
 	},
 	F: {
 		half: [
-			{key: "B", label: "D#"},
-			{key: "E", label: "F#"},
-			{key: "G", label: "G#"},
-			{key: "I", label: "A#"},
-			{key: "L", label: "C#"},
-			{key: "N", label: "D#²"},
-			{key: "Q", label: "F#²"},
-			{key: "S", label: "G#²"},
-			{key: "U", label: "A#²"}
+			{key: "B", label: "D\u266F"},
+			{key: "E", label: "F\u266F"},
+			{key: "G", label: "G\u266F"},
+			{key: "I", label: "A\u266F"},
+			{key: "L", label: "C\u266F"},
+			{key: "N", label: "D\u266F²"},
+			{key: "Q", label: "F\u266F²"},
+			{key: "S", label: "G\u266F²"},
+			{key: "U", label: "A\u266F²"}
 		],
 		full: [
 			{key: "A", label: "D"},
@@ -55,14 +55,14 @@ var KEY_MAPS = {
 	},
 	G: {
 		half: [
-			{key: "C", label: "F#"},
-			{key: "E", label: "G#"},
-			{key: "G", label: "A#"},
-			{key: "J", label: "C#"},
-			{key: "L", label: "D#"},
-			{key: "O", label: "F#²"},
-			{key: "Q", label: "G#²"},
-			{key: "S", label: "A#²"}
+			{key: "C", label: "F\u266F"},
+			{key: "E", label: "G\u266F"},
+			{key: "G", label: "A\u266F"},
+			{key: "J", label: "C\u266F"},
+			{key: "L", label: "D\u266F"},
+			{key: "O", label: "F\u266F²"},
+			{key: "Q", label: "G\u266F²"},
+			{key: "S", label: "A\u266F²"}
 		],
 		full: [
 			{key: "A", label: "E"},
