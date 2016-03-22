@@ -1,3 +1,96 @@
+var KEY_MAPS = {
+	C: {
+		half: [
+			{key: "B", label: "A#"},
+			{key: "E", label: "C#"},
+			{key: "G", label: "D#"},
+			{key: "J", label: "F#"},
+			{key: "L", label: "G#"},
+			{key: "N", label: "A#²"},
+			{key: "Q", label: "C#²"},
+			{key: "S", label: "D#²"}
+		],
+		full: [
+			{key: "A", label: "A"},
+			{key: "C", label: "B"},
+			{key: "D", label: "C"},
+			{key: "F", label: "D"},
+			{key: "H", label: "E"},
+			{key: "I", label: "F"},
+			{key: "K", label: "G"},
+			{key: "M", label: "A²"},
+			{key: "O", label: "B²"},
+			{key: "P", label: "C²"},
+			{key: "R", label: "D²"},
+			{key: "T", label: "E²"},
+			{key: "U", label: "F²"}
+		]
+	},
+	F: {
+		half: [
+			{key: "B", label: "D#"},
+			{key: "E", label: "F#"},
+			{key: "G", label: "G#"},
+			{key: "I", label: "A#"},
+			{key: "L", label: "C#"},
+			{key: "N", label: "D#²"},
+			{key: "Q", label: "F#²"},
+			{key: "S", label: "G#²"},
+			{key: "U", label: "A#²"}
+		],
+		full: [
+			{key: "A", label: "D"},
+			{key: "C", label: "E"},
+			{key: "D", label: "F"},
+			{key: "F", label: "G"},
+			{key: "H", label: "A"},
+			{key: "J", label: "B"},
+			{key: "K", label: "C"},
+			{key: "M", label: "D²"},
+			{key: "O", label: "E²"},
+			{key: "P", label: "F²"},
+			{key: "R", label: "G²"},
+			{key: "T", label: "A²"}
+		]
+	},
+	G: {
+		half: [
+			{key: "C", label: "F#"},
+			{key: "E", label: "G#"},
+			{key: "G", label: "A#"},
+			{key: "J", label: "C#"},
+			{key: "L", label: "D#"},
+			{key: "O", label: "F#²"},
+			{key: "Q", label: "G#²"},
+			{key: "S", label: "A#²"}
+		],
+		full: [
+			{key: "A", label: "E"},
+			{key: "B", label: "F"},
+			{key: "D", label: "G"},
+			{key: "F", label: "A"},
+			{key: "H", label: "B"},
+			{key: "I", label: "C"},
+			{key: "K", label: "D"},
+			{key: "M", label: "E²"},
+			{key: "N", label: "F²"},
+			{key: "P", label: "G²"},
+			{key: "R", label: "A²"},
+			{key: "T", label: "B²"},
+			{key: "U", label: "C²"}
+		]
+	}
+};
+
+var EXTRA_KEYS = [
+	{key: " ",  label: "\u00a0"},
+	{key: "-",  label: "\u2013"},
+	{key: "X",  label: "\u00D7"},
+	{key: "\n", label: "\u21B5"}
+];
+
+var last_cursor = null;
+
 function parseParams (search) {
 	search = search.replace(/^\?/,'');
 	var params = {};
@@ -19,16 +112,19 @@ function makeParams (params) {
 	return buf.sort().join('&').replace(/%20/g,'+').replace(/%0A/gi,'/');
 }
 
+function getFontFamily () {
+	var font = document.getElementById("font").value;
+	return '"Open 12 Hole Ocarina '+font+'", monospace';
+}
+
 function updateStyle() {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
-	var family = document.getElementById("font_family").value;
 	var editor = document.getElementById("editor");
 	editor.style.fontSize = size+unit;
-	editor.style.fontFamily = '"'+family+'", monospace';
+	editor.style.fontFamily = getFontFamily();
 }
 
-var last_cursor = null;
 function init() {
 	var editor = document.getElementById("editor");
 	updateStyle();
@@ -49,10 +145,15 @@ function init() {
 		editor.style.fontSize = size+unit;
 	}
 
-	if (params.family) {
-		document.getElementById("font_family").value = params.family;
-		editor.style.fontFamily = '"'+params.family+'", monospace';
+	if (params.font) {
+		document.getElementById("font").value = params.font;
 	}
+
+	if (params.key) {
+		document.getElementById("key").value = params.key;
+	}
+
+	editor.style.fontFamily = getFontFamily();
 
 	if (params.tabs) {
 		editor.innerHTML = '';
@@ -94,47 +195,49 @@ function init() {
 	editor.addEventListener("blur", function (event) {
 		last_cursor = getSelectionRange();
 	}, true);
-	
+
 	editor.addEventListener("focus", function (event) {
 		last_cursor = null;
 	}, true);
 
-	var full_notes = document.getElementById("full_notes");
-	var other_notes = document.getElementById("other_notes");
-
-	var full_keys = ["A","C","D","F","H","I","K","M","O","P","R","T","U"];
-	var full_labels = ["A","B","C","D","E","F","G","A²","B²","C²","D²","E²","F²"];
-
-	var other_keys = ["B","E","G","J","L","N","Q","S"," ","-","\n"];
-	var other_labels = ["A#","C#","D#","F#","G#","A#²","C#²","D#²","\u00a0","–","\u21B5"];
-
-	addButtons(full_notes, full_keys, full_labels);
-	addButtons(other_notes, other_keys, other_labels);
+	updateButtons();
 
 	editor.focus();
 
 	window.addEventListener("click", function (event) {
-		var menu = document.querySelector("#save-as-dropdown .dropdown-menu");
+		var menu  = document.querySelector("#save-as-dropdown .dropdown-menu");
 		var arrow = document.querySelector("#save-as-dropdown .dropdown-button-arrow");
 
 		if (event.target !== menu && !menu.contains(event.target) &&
 			event.target !== arrow && !arrow.contains(event.target)) {
 			menu.style.display = 'none';
 		}
-		
 	}, false);
 }
 
-function addButtons (parent, keys, labels) {
+function updateButtons () {
+	var key = document.getElementById("key").value;
+	var full_notes  = document.getElementById("full_notes");
+	var other_notes = document.getElementById("other_notes");
+
+	full_notes.innerHTML  = '';
+	other_notes.innerHTML = '';
+
+	var key_map = KEY_MAPS[key];
+	addButtons(full_notes, key_map.full);
+	addButtons(other_notes, key_map.half);
+	addButtons(other_notes, EXTRA_KEYS);
+}
+
+function addButtons (parent, keys) {
 	for (var i = 0; i < keys.length; ++ i) {
 		var key = keys[i];
-		var label = labels[i];
 		var button = document.createElement("button");
 		button.className = "btn";
 		button.type = "button";
-		button.title = key;
-		button.appendChild(document.createTextNode(label));
-		button.addEventListener("click", makeInserter(key), false);
+		button.title = key.key;
+		button.appendChild(document.createTextNode(key.label));
+		button.addEventListener("click", makeInserter(key.key), false);
 		parent.appendChild(button);
 		parent.appendChild(document.createTextNode(' '));
 	}
@@ -188,12 +291,14 @@ function setSelectionRange (range) {
 function formValues () {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
-	var family = document.getElementById("font_family").value;
+	var key  = document.getElementById("key").value;
+	var font = document.getElementById("font").value;
 	var editor = document.getElementById("editor");
 	return {
 		tabs: getPlainText(editor),
 		size: size+unit,
-		family: family
+		key:  key,
+		font: font
 	};
 }
 
@@ -292,7 +397,6 @@ function saveCanvasImage (canvas, filename, type) {
 function saveAsImage () {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
-	var family = document.getElementById("font_family").value;
 	var editor = document.getElementById("editor");
 	var lines = getPlainText(editor).split("\n");
 	var canvas = document.createElement("canvas");
@@ -301,7 +405,7 @@ function saveAsImage () {
 
 	var ctx = canvas.getContext("2d");
 	var line_width = 0;
-	var font = size+unit+" '"+family+"', monospace";
+	var font = size+unit+" "+getFontFamily();
 	ctx.font = font;
 	ctx.textBaseline = "top";
 

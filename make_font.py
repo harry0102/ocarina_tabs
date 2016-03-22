@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: UTF-8
 
+import string
 import os
 import re
 import fontforge
@@ -9,7 +10,7 @@ from lxml import etree
 if not hasattr(__builtins__, 'xrange'):
 	xrange = range
 
-LETTERS = dict(
+GLYPH_MAP = dict(
 	B = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11    },
 	E = {   2, 3, 4, 5, 6, 7, 8, 9, 10,     12},
 	G = {      3, 4, 5, 6, 7, 8, 9, 10,     12},
@@ -33,7 +34,6 @@ LETTERS = dict(
 	T = {                           10        },
 	U = {                                     }
 )
-
 RE_STYLE = re.compile(r'\s*([^:\s]+)\s*:\s*((?:[^;:"\'\\]|"(?:[^"\\]|\\\\|\\")*"|\'(?:[^\'\\]|\\\\|\\\')*\')+)\s*(;)?\s*')
 
 def parse_style(stylestr):
@@ -75,7 +75,7 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 
 	font.familyname = name
 	font.fullname = name
-	font.fontname = name.replace(" ","-")
+	font.fontname = name.replace(" ", "-")
 
 	for letter in letters:
 		fill = letters[letter]
@@ -100,6 +100,12 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 		glyph = font.createChar(ord(letter))
 		glyph.width = EM
 		glyph.importOutlines(letter_filename)
+
+	for letter in string.ascii_letters + string.digits:
+		if letter not in letters:
+			glyph = font.createChar(ord(letter))
+			glyph.width = EM
+			glyph.importOutlines('X.svg')
 
 	glyph = font.createChar(ord('-'))
 	glyph.width = EM
@@ -146,7 +152,7 @@ with others.
 
 The OFL allows the licensed fonts to be used, studied, modified and
 redistributed freely as long as they are not sold by themselves. The
-fonts, including any derivative works, can be bundled, embedded, 
+fonts, including any derivative works, can be bundled, embedded,
 redistributed and/or sold with any software provided that any reserved
 names are not used by derivative works. The fonts and derivatives,
 however, cannot be released under any other type of license. The
@@ -225,7 +231,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 if __name__ == '__main__':
 	import sys
-	svg  = sys.argv[1]
-	ttf  = sys.argv[2]
+	svg = sys.argv[1]
+	ttf = sys.argv[2]
 	name = ttf.rsplit('.', 1)[0].replace('-', ' ')
-	make_fonts(svg, ttf, name, 'tmp', LETTERS)
+	make_fonts(svg, ttf, name, 'tmp', GLYPH_MAP)
