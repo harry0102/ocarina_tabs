@@ -85,6 +85,7 @@ var KEY_MAPS = {
 var EXTRA_KEYS = [
 	{key: " ",  label: "\u00a0"},
 	{key: "-",  label: "\u2013"},
+	{key: "|",  label: "|"},
 	{key: "X",  label: "\u00D7"},
 	{key: "\n", label: "\u21B5"}
 ];

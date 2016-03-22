@@ -109,7 +109,6 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 
 	glyph = font.createChar(ord('-'))
 	glyph.width = EM
-#	glyph.importOutlines("dash.svg")
 
 	pen = glyph.glyphPen()
 	pen.moveTo((256, 256))
@@ -119,9 +118,16 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 	pen.closePath()
 	glyph.autoHint()
 
-#	glyph.autoHint()
-#	glyph.addHint(False, 256.0, 64.0)
-#	glyph.manualHints = 1
+	glyph = font.createChar(ord('|'))
+	glyph.width = EM
+
+	pen = glyph.glyphPen()
+	pen.moveTo((480, -192))
+	pen.lineTo((544, -192))
+	pen.lineTo((544, EM-192))
+	pen.lineTo((480, EM-192))
+	pen.closePath()
+	glyph.autoHint()
 
 	glyph = font.createChar(ord('_'))
 	glyph.width = EM
