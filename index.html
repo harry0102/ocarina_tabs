@@ -22,13 +22,13 @@
 
 		<style type="text/css">
 			@font-face {
-				font-family: "Open 12 Hole Ocarina C3";
-				src: url("/ocarina_tabs/Open-12-Hole-Ocarina-C3.ttf");
+				font-family: "Open 12 Hole Ocarina 1";
+				src: url("/ocarina_tabs/Open-12-Hole-Ocarina-1.ttf");
 			}
 
 			@font-face {
-				font-family: "Open 12 Hole Ocarina G4";
-				src: url("/ocarina_tabs/Open-12-Hole-Ocarina-G4.ttf");
+				font-family: "Open 12 Hole Ocarina 2";
+				src: url("/ocarina_tabs/Open-12-Hole-Ocarina-2.ttf");
 			}
 
 			html, body {
@@ -42,7 +42,7 @@
 			}
 
 			.tabs {
-				font-family: "Open 12 Hole Ocarina C3", monospace;
+				font-family: "Open 12 Hole Ocarina 1", monospace;
 				white-space: pre;
 				padding: 95px 20px 20px 20px;
 				outline: none;
@@ -229,9 +229,9 @@
 			<span class="controls-cell">
 				<span class="controls-line">
 					<label>Font:
-						<input type="number" id="font_size" onchange="updateStyle();" value="64"/>
+						<input type="number" id="font_size" onchange="updateStyle();" value="64" title="Font Size"/>
 					</label>
-					<select id="font_size_unit" onchange="updateStyle();">
+					<select id="font_size_unit" onchange="updateStyle();" title="Unit">
 						<option value="px" selected>px</option>
 						<option value="mm">mm</option>
 						<option value="cm">cm</option>
@@ -240,9 +240,15 @@
 						<option value="pc">pc</option>
 					</select>
 
-					<select id="font_family" onchange="updateStyle();">
-						<option value="Open 12 Hole Ocarina C3" selected>C3</option>
-						<option value="Open 12 Hole Ocarina G4">G4</option>
+					<select id="font" onchange="updateStyle();" title="Font Variant">
+						<option value="1" selected>1</option>
+						<option value="2">2</option>
+					</select>
+
+					<select id="key" onchange="updateButtons();" title="Key">
+						<option value="C" selected>C</option>
+						<option value="F">F</option>
+						<option value="G">G</option>
 					</select>
 				</span>
 
