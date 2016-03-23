@@ -90,6 +90,13 @@ var EXTRA_KEYS = [
 	{key: "\n", label: "\u21B5"}
 ];
 
+var HTML_CHARS = {
+	'<': '&lt;',
+	'>': '&gt;',
+	'"': '&quot;',
+	'&': '&amp;'
+};
+
 var last_cursor = null;
 
 function parseParams (search) {
@@ -158,7 +165,18 @@ function init() {
 
 	if (params.tabs) {
 		editor.innerHTML = '';
-		editor.appendChild(document.createTextNode(params.tabs));
+		var tabs = params.tabs.split("\n");
+		for (var i = 0; i < tabs.length; ++ i) {
+			var div  = document.createElement("div");
+			var line = tabs[i];
+			if (line.length === 0) {
+				div.appendChild(document.createElement("br"));
+			}
+			else {
+				div.appendChild(document.createTextNode(line));
+			}
+			editor.appendChild(div);
+		}
 	}
 
 	if (window !== parent) {
@@ -228,6 +246,14 @@ function updateButtons () {
 	addButtons(full_notes, key_map.full);
 	addButtons(other_notes, key_map.half);
 	addButtons(other_notes, EXTRA_KEYS);
+
+	var button = document.createElement("button");
+	button.className = "btn";
+	button.type = "button";
+	button.title = "Toggle Section";
+	button.appendChild(document.createTextNode("︵"));
+	button.addEventListener("click", toggleSection, false);
+	full_notes.appendChild(button);
 }
 
 function addButtons (parent, keys) {
@@ -263,29 +289,79 @@ function makeInserter (key) {
 	};
 }
 
-function getSelectionRange () {
-	if (window.getSelection) {
-		var sel = window.getSelection();
-		if (sel.getRangeAt && sel.rangeCount) {
-			return sel.getRangeAt(0);
+var SECTION_CP = {
+	'\u0305': true, // overline
+	'\u1DC7': true, // vertical bottom left paren
+	'\u1DC6': true, // vertical top left paren
+	'\u0311': true  // vertical left paren
+};
+
+
+// Combining Diacritical Marks (0300–036F), since version 1.0, with modifications in subsequent versions down to 4.1
+// Combining Diacritical Marks Extended (1AB0–1AFF), version 7.0
+// Combining Diacritical Marks Supplement (1DC0–1DFF), versions 4.1 to 5.2
+// Combining Diacritical Marks for Symbols (20D0–20FF), since version 1.0, with modifications in subsequent versions down to 5.1
+// Combining Half Marks (FE20–FE2F), versions 1.0, with modifications in subsequent versions down to 8.0
+
+function isCombining (cp) {
+	return (cp >= 0x0300 && cp <= 0x036F) ||
+	       (cp >= 0x1AB0 && cp <= 0x1AFF) ||
+	       (cp >= 0x1DC0 && cp <= 0x1DFF) ||
+	       (cp >= 0x20D0 && cp <= 0x20FF) ||
+	       (cp >= 0xFE20 && cp <= 0xFE2F);
+}
+
+function toggleSection () {
+	var range = getSelectionRange();
+
+	if (!range) return;
+
+	var text = getPlainText(range.cloneContents());
+
+	var i = 0;
+	var in_section = false;
+	while (i < text.length && !isCombining(text.charCodeAt(i))) ++ i;
+	while (i < text.length && isCombining(text.charCodeAt(i))) {
+		if (SECTION_CP[text.charAt(i)] === true) {
+			in_section = true;
+			break;
 		}
+		++ i;
 	}
-	else if (document.selection && document.selection.createRange) {
-		return document.selection.createRange();
+
+	document.execCommand('insertText', false, in_section ? removeSection(text) : addSection(text));
+}
+
+function removeSection (text) {
+	return text.replace(/[\u0305\u1DC7\u1DC6\u0311]/g,'');
+}
+
+function addSection (text) {
+	return removeSection(text).replace(/[A-Za-z0-9]+/g, function (slice) {
+		if (slice.length === 1) {
+			return slice+'\u0311';
+		}
+		else {
+			var first = slice.charAt(0);
+			var last  = slice.charAt(slice.length - 1);
+			return first+'\u1DC7'+slice.slice(1, slice.length-1).replace(/(.)/g, '$1\u0305')+last+'\u1DC6';
+		}
+	});
+}
+
+function getSelectionRange () {
+	var sel = window.getSelection();
+	if (sel.getRangeAt && sel.rangeCount) {
+		return sel.getRangeAt(0);
 	}
 	return null;
 }
 
 function setSelectionRange (range) {
 	if (range) {
-		if (window.getSelection) {
-			var sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
-		}
-		else if (document.selection && range.select) {
-			range.select();
-		}
+		var sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
 	}
 }
 
@@ -310,13 +386,6 @@ function shareUrl () {
 function shareLink () {
 	prompt("Share-Link:", shareUrl());
 }
-
-var HTML_CHARS = {
-	'<': '&lt;',
-	'>': '&gt;',
-	'"': '&quot;',
-	'&': '&amp;'
-};
 
 function escapeHtml (s) {
 	return s.replace(/[<>"&]/g, function (ch) {
@@ -560,21 +629,13 @@ function setCursorToEnd (element) {
 		element = lc;
 	}
 
-	var range, selection;
-	if (document.createRange) { // Firefox, Chrome, Opera, Safari, IE 9+
-		range = document.createRange();
-		range.selectNodeContents(element);
-		range.collapse(false);
-		selection = window.getSelection();
-		selection.removeAllRanges();
-		selection.addRange(range);
-	}
-	else if (document.selection) { // IE 8 and lower
-		range = document.body.createTextRange();
-		range.moveToElementText(element);
-		range.collapse(false);
-		range.select();
-	}
+	var range = document.createRange();
+	range.selectNodeContents(element);
+	range.collapse(false);
+
+	var selection = window.getSelection();
+	selection.removeAllRanges();
+	selection.addRange(range);
 }
 
 function installApp () {

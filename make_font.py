@@ -100,12 +100,15 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 		glyph = font.createChar(ord(letter))
 		glyph.width = EM
 		glyph.importOutlines(letter_filename)
+		glyph.correctDirection()
+		# TODO: glyph.addAnchorPoint()
 
 	for letter in string.ascii_letters + string.digits:
 		if letter not in letters:
 			glyph = font.createChar(ord(letter))
 			glyph.width = EM
 			glyph.importOutlines('X.svg')
+			glyph.correctDirection()
 
 	glyph = font.createChar(ord('-'))
 	glyph.width = EM
@@ -116,17 +119,76 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 	pen.lineTo((EM-256, 320))
 	pen.lineTo((EM-256, 256))
 	pen.closePath()
+	glyph.correctDirection()
 	glyph.autoHint()
 
 	glyph = font.createChar(ord('|'))
 	glyph.width = EM
-
 	pen = glyph.glyphPen()
 	pen.moveTo((480, -192))
-	pen.lineTo((544, -192))
-	pen.lineTo((544, EM-192))
 	pen.lineTo((480, EM-192))
+	pen.lineTo((544, EM-192))
+	pen.lineTo((544, -192))
 	pen.closePath()
+	glyph.correctDirection()
+	glyph.autoHint()
+
+	glyph = font.createChar(0x0305)
+	glyph.width = EM
+	pen = glyph.glyphPen()
+	pen.moveTo(( 0, EM))
+	pen.lineTo(( 0, EM+64))
+	pen.lineTo((EM, EM+64))
+	pen.lineTo((EM, EM))
+	pen.closePath()
+	glyph.correctDirection()
+	glyph.autoHint()
+
+	glyph = font.createChar(0x1DC7)
+	glyph.width = EM
+#	glyph.importOutlines('vltparen.svg')
+#	glyph.correctDirection()
+	pen = glyph.glyphPen()
+	pen.moveTo((EM-640, EM+64))
+	pen.lineTo((EM-640, EM-128))
+	pen.lineTo((EM-576, EM-128))
+	pen.lineTo((EM-576, EM))
+	pen.lineTo((EM, EM))
+	pen.lineTo((EM, EM+64))
+	pen.closePath()
+	glyph.correctDirection()
+	glyph.autoHint()
+
+	glyph = font.createChar(0x1DC6)
+	glyph.width = EM
+#	glyph.importOutlines('vlbparen.svg')
+#	glyph.correctDirection()
+	pen = glyph.glyphPen()
+	pen.moveTo((0, EM+64))
+	pen.lineTo((0, EM))
+	pen.lineTo((576, EM))
+	pen.lineTo((576, EM-128))
+	pen.lineTo((640, EM-128))
+	pen.lineTo((640, EM+64))
+	pen.closePath()
+	glyph.correctDirection()
+	glyph.autoHint()
+
+	glyph = font.createChar(0x0311)
+	glyph.width = EM
+#	glyph.importOutlines('vlparen.svg')
+#	glyph.correctDirection()
+	pen = glyph.glyphPen()
+	pen.moveTo((128, EM+64))
+	pen.lineTo((128, EM-128))
+	pen.lineTo((192, EM-128))
+	pen.lineTo((192, EM))
+	pen.lineTo((EM-192, EM))
+	pen.lineTo((EM-192, EM-128))
+	pen.lineTo((EM-128, EM-128))
+	pen.lineTo((EM-128, EM+64))
+	pen.closePath()
+	glyph.correctDirection()
 	glyph.autoHint()
 
 	glyph = font.createChar(ord('_'))
