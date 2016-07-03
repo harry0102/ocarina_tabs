@@ -408,7 +408,10 @@ function _getPlainText (element, buf) {
 	for (var el = element.firstChild; el; el = el.nextSibling) {
 		if (el.nodeType === 1) {
 			if (buf.length > 0 && buf[buf.length - 1] !== "\n") {
-				buf.push("\n");
+				var display = getComputedStyle(el, null).getPropertyValue("display");
+				if (display !== "inline" && display !== "inline-block") {
+					buf.push("\n");
+				}
 			}
 
 			if (el.nodeName !== "STYLE" && el.nodeName !== "SCRIPT") {
@@ -417,12 +420,6 @@ function _getPlainText (element, buf) {
 				}
 				else {
 					_getPlainText(el, buf);
-					if (buf.length > 0 && buf[buf.length - 1] !== "\n" && el.nextSibling) {
-						var display = getComputedStyle(el, null).getPropertyValue("display");
-						if (display !== "inline" && display !== "inline-block") {
-							buf.push("\n");
-						}
-					}
 				}
 			}
 		}
