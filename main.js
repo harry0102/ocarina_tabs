@@ -83,6 +83,8 @@ var KEY_MAPS = {
 };
 
 var EXTRA_KEYS = [
+	{key: "q",  label: "\u00D72"},
+	{key: "r",  label: "Rest"},
 	{key: " ",  label: "\u00a0"},
 	{key: "-",  label: "\u2013"},
 	{key: "|",  label: "|"},
