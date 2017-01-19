@@ -4,8 +4,8 @@ FONTS=Open-12-Hole-Ocarina-1.ttf Open-12-Hole-Ocarina-2.ttf
 
 all: $(FONTS)
 
-%.ttf: %.svg X.svg make_font.py
-	./make_font.py $< $@
+%.ttf: %.svg %-Rest.svg x2.svg X.svg make_font.py
+	./make_font.py $< $(word 2,$+) $@
 
 clean:
 	rm -v $(FONTS)

@@ -13,3 +13,6 @@ Font Downloads
 License
 -------
 The fonts are licensed under the [Open Font License 1.1](http://scripts.sil.org/OFL).
+
+Letters used in the font are based on the [Liberation](https://fedorahosted.org/liberation-fonts/)
+Sans font.

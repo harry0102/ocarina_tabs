@@ -34,6 +34,12 @@ GLYPH_MAP = dict(
 	T = {                           10        },
 	U = {                                     }
 )
+
+EXTRA_GLYPHS = dict(
+	q = 'x2',
+	r = 'rest'
+)
+
 RE_STYLE = re.compile(r'\s*([^:\s]+)\s*:\s*((?:[^;:"\'\\]|"(?:[^"\\]|\\\\|\\")*"|\'(?:[^\'\\]|\\\\|\\\')*\')+)\s*(;)?\s*')
 
 def parse_style(stylestr):
@@ -62,12 +68,12 @@ def parse_style(stylestr):
 def stringify_style(style):
 	return u';'.join(u'%s: %s' % (key, style[key]) for key in style)
 
-def make_fonts(infilename, outfilename, name, tmpdir, letters):
+def make_fonts(templfilename, restfilename, outfilename, name, tmpdir, letters):
 	if not os.path.exists(tmpdir):
 		os.makedirs(tmpdir)
 
-	with open(infilename, 'rb') as infile:
-		svg = etree.parse(infile)
+	with open(templfilename, 'rb') as infile:
+		templ = etree.parse(infile)
 
 	EM = 1024
 	font = fontforge.font()
@@ -80,7 +86,7 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 	for letter in letters:
 		fill = letters[letter]
 		for hole in xrange(1, 13):
-			el = svg.find("//*[@id='hole_%d']" % hole)
+			el = templ.find("//*[@id='hole_%d']" % hole)
 			style = parse_style(el.attrib.get("style", ""))
 
 			if hole in fill:
@@ -92,7 +98,7 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 
 			el.attrib["style"] = stringify_style(style)
 
-		letter_svg = etree.tostring(svg)
+		letter_svg = etree.tostring(templ)
 		letter_filename = os.path.join(tmpdir, letter+'.svg')
 		with open(letter_filename, 'wb') as outfile:
 			outfile.write(letter_svg)
@@ -104,11 +110,21 @@ def make_fonts(infilename, outfilename, name, tmpdir, letters):
 		# TODO: glyph.addAnchorPoint()
 
 	for letter in string.ascii_letters + string.digits:
-		if letter not in letters:
+		if letter not in letters and letter not in EXTRA_GLYPHS:
 			glyph = font.createChar(ord(letter))
 			glyph.width = EM
 			glyph.importOutlines('X.svg')
 			glyph.correctDirection()
+
+	glyph = font.createChar(ord('q'))
+	glyph.width = EM
+	glyph.importOutlines('x2.svg')
+	glyph.correctDirection()
+
+	glyph = font.createChar(ord('r'))
+	glyph.width = EM
+	glyph.importOutlines(restfilename)
+	glyph.correctDirection()
 
 	glyph = font.createChar(ord('-'))
 	glyph.width = EM
@@ -299,7 +315,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 if __name__ == '__main__':
 	import sys
-	svg = sys.argv[1]
-	ttf = sys.argv[2]
-	name = ttf.rsplit('.', 1)[0].replace('-', ' ')
-	make_fonts(svg, ttf, name, 'tmp', GLYPH_MAP)
+	templ = sys.argv[1]
+	rest  = sys.argv[2]
+	ttf   = sys.argv[3]
+	name  = ttf.rsplit('.', 1)[0].replace('-', ' ')
+	make_fonts(templ, rest, ttf, name, 'tmp', GLYPH_MAP)
