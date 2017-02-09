@@ -274,8 +274,10 @@ function updateButtons () {
 function changeTitle () {
 	var nameEl = document.getElementById("name");
 	var name = prompt('Enter new title:', nameEl.textContent);
-	nameEl.textContent = name;
-	document.title = name + ' - 12 Hole Ocarina Tabs Creator';
+	if (name !== null) {
+		nameEl.textContent = name;
+		document.title = name + ' - 12 Hole Ocarina Tabs Creator';
+	}
 }
 
 function addButtons (parent, keys) {
