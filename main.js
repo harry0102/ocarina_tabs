@@ -127,16 +127,22 @@ function getFontFamily () {
 	return '"Open 12 Hole Ocarina '+font+'", monospace';
 }
 
+
+var TITLE_SCALE = 0.5;
+
 function updateStyle() {
 	var size = Number(document.getElementById("font_size").value);
 	var unit = document.getElementById("font_size_unit").value;
 	var editor = document.getElementById("editor");
+	var name = document.getElementById("name");
+	name.style.fontSize = (size * TITLE_SCALE)+unit;
 	editor.style.fontSize = size+unit;
 	editor.style.fontFamily = getFontFamily();
 }
 
 function init() {
 	var editor = document.getElementById("editor");
+	var name = document.getElementById("name");
 	updateStyle();
 
 	var params = parseParams(location.search);
@@ -146,13 +152,20 @@ function init() {
 		document.body.className = 'readonly';
 	}
 
+	if (params.name) {
+		name.textContent = params.name;
+		document.title = params.name + ' - 12 Hole Ocarina Tabs Creator';
+	}
+
 	if (params.size) {
 		var match = /^\s*(\d+(?:\.\d*)?)(\w+)?\s*$/.exec(params.size);
 		var size = Number(match[1]);
 		var unit = match[2]||'px';
+		var fontSize = size+unit;
 		document.getElementById("font_size").value = size;
 		document.getElementById("font_size_unit").value = unit;
 		editor.style.fontSize = size+unit;
+		name.style.fontSize = (size * TITLE_SCALE)+unit;
 	}
 
 	if (params.font) {
@@ -258,6 +271,13 @@ function updateButtons () {
 	button.addEventListener("click", toggleSection, false);
 	full_notes.appendChild(button);
 */
+}
+
+function changeTitle () {
+	var nameEl = document.getElementById("name");
+	var name = prompt('Enter new title:', nameEl.textContent);
+	nameEl.textContent = name;
+	document.title = name + ' - 12 Hole Ocarina Tabs Creator';
 }
 
 function addButtons (parent, keys) {
@@ -375,12 +395,17 @@ function formValues () {
 	var key  = document.getElementById("key").value;
 	var font = document.getElementById("font").value;
 	var editor = document.getElementById("editor");
-	return {
+	var name = document.getElementById("name").textContent;
+	var values = {
 		tabs: getPlainText(editor),
 		size: size+unit,
 		key:  key,
 		font: font
 	};
+	if (name) {
+		values.name = name;
+	}
+	return values;
 }
 
 function shareUrl () {

@@ -200,6 +200,11 @@
 				min-width: 30em;
 			}
 
+			#name {
+				text-align: center;
+				display: none;
+			}
+
 			@media print {
 				.tabs {
 					padding: 20px;
@@ -207,6 +212,10 @@
 
 				.controls {
 					display: none;
+				}
+
+				#name {
+					display: block;
 				}
 			}
 
@@ -249,6 +258,8 @@
 						<option value="F">F</option>
 						<option value="G">G</option>
 					</select>
+
+					<button type="button" onclick="changeTitle();" title="Change Title">Title...</button>
 				</span>
 
 				<span class="controls-line">
@@ -275,6 +286,7 @@
 			</span>
 
 		</div>
+		<div id="name"></div>
 		<div class="tabs" id="editor" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" contentEditable="true"></div>
 	</body>
 </html>
